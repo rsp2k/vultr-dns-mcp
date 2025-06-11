@@ -32,19 +32,8 @@ def cli(ctx: click.Context, api_key: Optional[str]):
 
 
 @cli.command()
-@click.option(
-    "--host", 
-    default="localhost", 
-    help="Host to bind the server to"
-)
-@click.option(
-    "--port", 
-    default=8000, 
-    type=int, 
-    help="Port to bind the server to"
-)
 @click.pass_context
-def server(ctx: click.Context, host: str, port: int):
+def server(ctx: click.Context):
     """Start the Vultr DNS MCP server."""
     api_key = ctx.obj.get('api_key')
     
@@ -54,11 +43,11 @@ def server(ctx: click.Context, host: str, port: int):
         sys.exit(1)
     
     click.echo(f"🚀 Starting Vultr DNS MCP Server...")
-    click.echo(f"📡 API Key: {api_key[:8]}...")
+    click.echo(f"🔑 API Key: {api_key[:8]}...")
     click.echo(f"🔄 Press Ctrl+C to stop")
     
     try:
-        run_server(api_key)
+        asyncio.run(run_server(api_key))
     except KeyboardInterrupt:
         click.echo("\n👋 Server stopped")
     except Exception as e:
@@ -211,7 +200,7 @@ def list_records(ctx: click.Context, domain: str, record_type: Optional[str]):
                 data = record.get('data', 'Unknown')
                 ttl = record.get('ttl', 'Unknown')
                 
-                click.echo(f"  • [{record_id}] {r_type:6} {name:20} → {data} (TTL: {ttl})")
+                click.echo(f"  • [{record_id}] {r_type:6} {name:20} ➜ {data} (TTL: {ttl})")
                 
         except Exception as e:
             click.echo(f"Error: {e}", err=True)
@@ -253,7 +242,7 @@ def add_record(
                 sys.exit(1)
             
             record_id = result.get('id', 'Unknown')
-            click.echo(f"✅ Created {record_type} record [{record_id}]: {name} → {value}")
+            click.echo(f"✅ Created {record_type} record [{record_id}]: {name} ➜ {value}")
                 
         except Exception as e:
             click.echo(f"Error: {e}", err=True)
