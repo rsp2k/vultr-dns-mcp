@@ -9,10 +9,10 @@ description = "A comprehensive Model Context Protocol (MCP) server for managing 
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "Claude AI Assistant", email = "claude@anthropic.com"}
+    {name = "Ryan Malloy", email = "ryan@supported.systems"}
 ]
 maintainers = [
-    {name = "Claude AI Assistant", email = "claude@anthropic.com"}
+    {name = "Ryan Malloy", email = "ryan@supported.systems"}
 ]
 keywords = [
     "vultr", 
@@ -74,11 +74,11 @@ test = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/vultr/vultr-dns-mcp"
+Homepage = "https://github.com/rsp2k/vultr-dns-mcp"
 Documentation = "https://vultr-dns-mcp.readthedocs.io/"
-Repository = "https://github.com/vultr/vultr-dns-mcp.git"
-"Bug Tracker" = "https://github.com/vultr/vultr-dns-mcp/issues"
-Changelog = "https://github.com/vultr/vultr-dns-mcp/blob/main/CHANGELOG.md"
+Repository = "https://github.com/rsp2k/vultr-dns-mcp.git"
+"Bug Tracker" = "https://github.com/rsp2k/vultr-dns-mcp/issues"
+Changelog = "https://github.com/rsp2k/vultr-dns-mcp/blob/main/CHANGELOG.md"
 
 [project.scripts]
 vultr-dns-mcp = "vultr_dns_mcp.cli:main"
