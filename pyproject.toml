@@ -21,7 +21,7 @@ keywords = [
     "model-context-protocol", 
     "dns-management", 
     "api", 
-    "fastmcp"
+    "mcp-server"
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -30,11 +30,10 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Internet :: Name Service (DNS)",
     "Topic :: System :: Systems Administration",
     "Topic :: Software Development :: Libraries :: Python Modules",
@@ -42,9 +41,9 @@ classifiers = [
     "Environment :: Console",
     "Framework :: AsyncIO"
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = [
-    "fastmcp>=0.1.0",
+    "mcp>=1.0.0",
     "httpx>=0.24.0",
     "pydantic>=2.0.0",
     "click>=8.0.0"
@@ -92,7 +91,7 @@ vultr_dns_mcp = ["py.typed"]
 
 [tool.black]
 line-length = 88
-target-version = ["py38", "py39", "py310", "py311", "py312"]
+target-version = ["py310", "py311", "py312", "py313"]
 include = '\.pyi?$'
 extend-exclude = '''
 /(
@@ -115,7 +114,7 @@ line_length = 88
 known_first_party = ["vultr_dns_mcp"]
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -131,7 +130,7 @@ strict_equality = true
 show_error_codes = true
 
 [[tool.mypy.overrides]]
-module = ["fastmcp.*"]
+module = ["mcp.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
