@@ -37,7 +37,7 @@ __all__ = [
 ]
 
 # Package metadata
-__author__ = "Claude AI Assistant"
-__email__ = "claude@anthropic.com"
+__author__ = "Ryan Malloy"
+__email__ = "ryan@supported.systems"
 __license__ = "MIT"
 __description__ = "A comprehensive Model Context Protocol server for Vultr DNS management"
