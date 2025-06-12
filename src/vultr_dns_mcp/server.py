@@ -13,8 +13,7 @@ import sys
 from typing import Any
 
 import httpx
-
-from mcp.server import Server, InitializationOptions, NotificationOptions
+from mcp.server import InitializationOptions, NotificationOptions, Server
 from mcp.server.stdio import stdio_server
 from mcp.types import Resource, TextContent, Tool
 
@@ -766,7 +765,7 @@ async def run_server(api_key: str | None = None) -> None:
         )
 
 
-def handle_shutdown(signum, frame):
+def handle_shutdown(signum, frame):  #noqa: ARG001
     print("Shutting down gracefully...")
     sys.exit(0)
 
