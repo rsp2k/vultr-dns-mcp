@@ -64,9 +64,9 @@ def test_mcp_server_creation():
     server = create_mcp_server("test-api-key-for-testing")
     assert server is not None
     
-    # Check that server has expected attributes
-    assert hasattr(server, '_tools')
-    assert hasattr(server, '_resources')
+    # Check that server has expected handlers instead of _tools attribute
+    assert hasattr(server, '_tool_handlers') or hasattr(server, 'tool_handlers')
+    assert hasattr(server, '_resource_handlers') or hasattr(server, 'resource_handlers')
 
 
 def test_cli_entry_points():
