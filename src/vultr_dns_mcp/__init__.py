@@ -45,8 +45,8 @@ __all__ = [
     "__version__",
     "__version_info__",
     "create_mcp_server",
-    "run_server",
     "main",
+    "run_server",
 ]
 
 # Package metadata
