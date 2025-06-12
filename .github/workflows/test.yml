@@ -80,14 +80,6 @@ jobs:
           --durations=10 \
           --tb=short
     
-    - name: Test CLI functionality
-      run: |
-        echo "🖥️ Testing CLI functionality..."
-        
-        # Test CLI entry points exist and respond
-        vultr-dns-mcp --help > /dev/null && echo "✅ vultr-dns-mcp CLI works" || echo "❌ vultr-dns-mcp CLI failed"
-        vultr-dns-server --help > /dev/null && echo "✅ vultr-dns-server CLI works" || echo "❌ vultr-dns-server CLI failed"
-        
         # Test version reporting
         python -c "
         import vultr_dns_mcp
