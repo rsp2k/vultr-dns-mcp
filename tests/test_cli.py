@@ -1,10 +1,10 @@
 """Tests for CLI functionality."""
 
-import pytest
-from unittest.mock import patch, MagicMock
-from click.testing import CliRunner
-import sys
 import os
+from unittest.mock import MagicMock, patch
+
+import pytest
+from click.testing import CliRunner
 
 
 @pytest.mark.cli
@@ -123,7 +123,6 @@ class TestCLIIntegration:
     @pytest.mark.integration
     def test_cli_version_display(self):
         """Test CLI can display version information."""
-        from vultr_dns_mcp import __version__
         from vultr_dns_mcp.cli import main
 
         runner = CliRunner()
@@ -180,5 +179,5 @@ def test_cli_imports():
     assert server_command is not None
 
     # Test that they're click commands
-    assert hasattr(main, "__call__")
-    assert hasattr(server_command, "__call__")
+    assert callable(main)
+    assert callable(server_command)

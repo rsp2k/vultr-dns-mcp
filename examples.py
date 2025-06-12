@@ -11,7 +11,8 @@ This script demonstrates various ways to use the package:
 
 import asyncio
 import os
-from vultr_dns_mcp import VultrDNSClient, VultrDNSServer, create_mcp_server
+
+from vultr_dns_mcp import VultrDNSClient, create_mcp_server
 
 
 async def client_example():

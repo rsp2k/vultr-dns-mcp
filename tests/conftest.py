@@ -1,10 +1,10 @@
 """Pytest configuration and shared fixtures."""
 
-import pytest
 import asyncio
 import os
 from unittest.mock import AsyncMock, MagicMock
-from pathlib import Path
+
+import pytest
 
 
 @pytest.fixture

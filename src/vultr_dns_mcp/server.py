@@ -7,13 +7,12 @@ for managing DNS records through the Vultr API.
 
 import os
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import httpx
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import Resource, TextContent, Tool
-from pydantic import BaseModel
 
 
 class VultrDNSServer:
@@ -40,8 +39,8 @@ class VultrDNSServer:
         }
 
     async def _make_request(
-        self, method: str, endpoint: str, data: Optional[Dict] = None
-    ) -> Dict[str, Any]:
+        self, method: str, endpoint: str, data: dict | None = None
+    ) -> dict[str, Any]:
         """Make an HTTP request to the Vultr API."""
         url = f"{self.API_BASE}{endpoint}"
 
@@ -61,31 +60,31 @@ class VultrDNSServer:
             return response.json()
 
     # Domain Management Methods
-    async def list_domains(self) -> List[Dict[str, Any]]:
+    async def list_domains(self) -> list[dict[str, Any]]:
         """List all DNS domains."""
         result = await self._make_request("GET", "/domains")
         return result.get("domains", [])
 
-    async def get_domain(self, domain: str) -> Dict[str, Any]:
+    async def get_domain(self, domain: str) -> dict[str, Any]:
         """Get details for a specific domain."""
         return await self._make_request("GET", f"/domains/{domain}")
 
-    async def create_domain(self, domain: str, ip: str) -> Dict[str, Any]:
+    async def create_domain(self, domain: str, ip: str) -> dict[str, Any]:
         """Create a new DNS domain."""
         data = {"domain": domain, "ip": ip}
         return await self._make_request("POST", "/domains", data)
 
-    async def delete_domain(self, domain: str) -> Dict[str, Any]:
+    async def delete_domain(self, domain: str) -> dict[str, Any]:
         """Delete a DNS domain."""
         return await self._make_request("DELETE", f"/domains/{domain}")
 
     # DNS Record Management Methods
-    async def list_records(self, domain: str) -> List[Dict[str, Any]]:
+    async def list_records(self, domain: str) -> list[dict[str, Any]]:
         """List all DNS records for a domain."""
         result = await self._make_request("GET", f"/domains/{domain}/records")
         return result.get("records", [])
 
-    async def get_record(self, domain: str, record_id: str) -> Dict[str, Any]:
+    async def get_record(self, domain: str, record_id: str) -> dict[str, Any]:
         """Get a specific DNS record."""
         return await self._make_request("GET", f"/domains/{domain}/records/{record_id}")
 
@@ -95,9 +94,9 @@ class VultrDNSServer:
         record_type: str,
         name: str,
         data: str,
-        ttl: Optional[int] = None,
-        priority: Optional[int] = None,
-    ) -> Dict[str, Any]:
+        ttl: int | None = None,
+        priority: int | None = None,
+    ) -> dict[str, Any]:
         """Create a new DNS record."""
         payload = {"type": record_type, "name": name, "data": data}
 
@@ -115,9 +114,9 @@ class VultrDNSServer:
         record_type: str,
         name: str,
         data: str,
-        ttl: Optional[int] = None,
-        priority: Optional[int] = None,
-    ) -> Dict[str, Any]:
+        ttl: int | None = None,
+        priority: int | None = None,
+    ) -> dict[str, Any]:
         """Update an existing DNS record."""
         payload = {"type": record_type, "name": name, "data": data}
 
@@ -130,14 +129,14 @@ class VultrDNSServer:
             "PATCH", f"/domains/{domain}/records/{record_id}", payload
         )
 
-    async def delete_record(self, domain: str, record_id: str) -> Dict[str, Any]:
+    async def delete_record(self, domain: str, record_id: str) -> dict[str, Any]:
         """Delete a DNS record."""
         return await self._make_request(
             "DELETE", f"/domains/{domain}/records/{record_id}"
         )
 
 
-def create_mcp_server(api_key: Optional[str] = None) -> Server:
+def create_mcp_server(api_key: str | None = None) -> Server:
     """
     Create and configure an MCP server for Vultr DNS management.
 
@@ -166,7 +165,7 @@ def create_mcp_server(api_key: Optional[str] = None) -> Server:
 
     # Add resources for client discovery
     @server.list_resources()
-    async def list_resources() -> List[Resource]:
+    async def list_resources() -> list[Resource]:
         """List available resources."""
         return [
             Resource(
@@ -191,7 +190,7 @@ def create_mcp_server(api_key: Optional[str] = None) -> Server:
                 domains = await vultr_client.list_domains()
                 return str(domains)
             except Exception as e:
-                return f"Error loading domains: {str(e)}"
+                return f"Error loading domains: {e!s}"
 
         elif uri == "vultr://capabilities":
             capabilities = {
@@ -257,13 +256,13 @@ def create_mcp_server(api_key: Optional[str] = None) -> Server:
                     {"domain": domain, "records": records, "record_count": len(records)}
                 )
             except Exception as e:
-                return f"Error loading records for {domain}: {str(e)}"
+                return f"Error loading records for {domain}: {e!s}"
 
         return "Resource not found"
 
     # Define MCP tools
     @server.list_tools()
-    async def list_tools() -> List[Tool]:
+    async def list_tools() -> list[Tool]:
         """List available tools."""
         return [
             Tool(
@@ -480,7 +479,7 @@ def create_mcp_server(api_key: Optional[str] = None) -> Server:
         ]
 
     @server.call_tool()
-    async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
+    async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         """Handle tool calls."""
         try:
             if name == "list_dns_domains":
@@ -729,12 +728,12 @@ def create_mcp_server(api_key: Optional[str] = None) -> Server:
                 return [TextContent(type="text", text=f"Unknown tool: {name}")]
 
         except Exception as e:
-            return [TextContent(type="text", text=f"Error: {str(e)}")]
+            return [TextContent(type="text", text=f"Error: {e!s}")]
 
     return server
 
 
-async def run_server(api_key: Optional[str] = None) -> None:
+async def run_server(api_key: str | None = None) -> None:
     """
     Create and run a Vultr DNS MCP server.
 

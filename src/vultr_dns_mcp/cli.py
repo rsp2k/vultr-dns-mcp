@@ -7,7 +7,6 @@ performing DNS operations directly from the command line.
 
 import asyncio
 import sys
-from typing import Optional
 
 import click
 
@@ -24,7 +23,7 @@ from .server import run_server
     help="Vultr API key (or set VULTR_API_KEY environment variable)",
 )
 @click.pass_context
-def cli(ctx: click.Context, api_key: Optional[str]):
+def cli(ctx: click.Context, api_key: str | None):
     """Vultr DNS MCP - Manage Vultr DNS through Model Context Protocol."""
     ctx.ensure_object(dict)
     ctx.obj["api_key"] = api_key
@@ -124,15 +123,13 @@ def domain_info(ctx: click.Context, domain: str):
             config = summary["configuration"]
             click.echo("Configuration:")
             click.echo(
-                f"  • Root domain record: "
-                f"{'✅' if config['has_root_record'] else '❌'}"
+                f"  • Root domain record: {'✅' if config['has_root_record'] else '❌'}"
             )
             click.echo(
-                f"  • WWW subdomain: "
-                f"{'✅' if config['has_www_subdomain'] else '❌'}"
+                f"  • WWW subdomain: {'✅' if config['has_www_subdomain'] else '❌'}"
             )
             click.echo(
-                f"  • Email setup: " f"{'✅' if config['has_email_setup'] else '❌'}"
+                f"  • Email setup: {'✅' if config['has_email_setup'] else '❌'}"
             )
 
         except Exception as e:
@@ -182,7 +179,7 @@ def records(ctx: click.Context):
 @click.argument("domain")
 @click.option("--type", "record_type", help="Filter by record type")
 @click.pass_context
-def list_records(ctx: click.Context, domain: str, record_type: Optional[str]):
+def list_records(ctx: click.Context, domain: str, record_type: str | None):
     """List DNS records for a domain."""
     api_key = ctx.obj.get("api_key")
     if not api_key:
@@ -210,7 +207,7 @@ def list_records(ctx: click.Context, domain: str, record_type: Optional[str]):
                 ttl = record.get("ttl", "Unknown")
 
                 click.echo(
-                    f"  • [{record_id}] {r_type:6} {name:20} " f"➜ {data} (TTL: {ttl})"
+                    f"  • [{record_id}] {r_type:6} {name:20} ➜ {data} (TTL: {ttl})"
                 )
 
         except Exception as e:
@@ -234,8 +231,8 @@ def add_record(
     record_type: str,
     name: str,
     value: str,
-    ttl: Optional[int],
-    priority: Optional[int],
+    ttl: int | None,
+    priority: int | None,
 ):
     """Add a new DNS record."""
     api_key = ctx.obj.get("api_key")
@@ -256,7 +253,7 @@ def add_record(
 
             record_id = result.get("id", "Unknown")
             click.echo(
-                f"✅ Created {record_type} record [{record_id}]: " f"{name} ➜ {value}"
+                f"✅ Created {record_type} record [{record_id}]: {name} ➜ {value}"
             )
 
         except Exception as e:
@@ -303,7 +300,7 @@ def delete_record(ctx: click.Context, domain: str, record_id: str):
 @click.option("--ttl", type=int, help="TTL for records")
 @click.pass_context
 def setup_website(
-    ctx: click.Context, domain: str, ip: str, include_www: bool, ttl: Optional[int]
+    ctx: click.Context, domain: str, ip: str, include_www: bool, ttl: int | None
 ):
     """Set up basic DNS records for a website."""
     api_key = ctx.obj.get("api_key")
@@ -343,7 +340,7 @@ def setup_website(
 @click.option("--ttl", type=int, help="TTL for records")
 @click.pass_context
 def setup_email(
-    ctx: click.Context, domain: str, mail_server: str, priority: int, ttl: Optional[int]
+    ctx: click.Context, domain: str, mail_server: str, priority: int, ttl: int | None
 ):
     """Set up basic email DNS records."""
     api_key = ctx.obj.get("api_key")

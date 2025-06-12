@@ -1,9 +1,8 @@
 """Basic package validation tests."""
 
-import pytest
-import importlib.util
-import sys
 from pathlib import Path
+
+import pytest
 
 
 def test_package_can_be_imported():

@@ -44,7 +44,7 @@ def get_version_from_version_py() -> str:
     if not version_path.exists():
         raise FileNotFoundError("src/vultr_dns_mcp/_version.py not found")
 
-    with open(version_path, "r") as f:
+    with open(version_path) as f:
         content = f.read()
 
     match = re.search(r'__version__\s*=\s*["\']([^"\']+)["\']', content)
@@ -74,7 +74,7 @@ def update_pyproject_toml(new_version: str) -> None:
     """Update version in pyproject.toml."""
     pyproject_path = Path("pyproject.toml")
 
-    with open(pyproject_path, "r") as f:
+    with open(pyproject_path) as f:
         content = f.read()
 
     # Replace version line

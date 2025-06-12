@@ -28,12 +28,12 @@ from .client import VultrDNSClient
 from .server import VultrDNSServer, create_mcp_server, run_server
 
 __all__ = [
-    "VultrDNSServer",
     "VultrDNSClient",
-    "create_mcp_server",
-    "run_server",
+    "VultrDNSServer",
     "__version__",
     "__version_info__",
+    "create_mcp_server",
+    "run_server",
 ]
 
 # Package metadata

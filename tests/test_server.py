@@ -1,9 +1,11 @@
 """Tests for MCP server functionality."""
 
-import pytest
-from unittest.mock import patch, AsyncMock, MagicMock
 import os
-from vultr_dns_mcp.server import create_mcp_server, VultrDNSServer
+from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
+
+from vultr_dns_mcp.server import VultrDNSServer, create_mcp_server
 
 
 @pytest.mark.unit
