@@ -765,7 +765,7 @@ async def run_server(api_key: str | None = None) -> None:
         )
 
 
-def handle_shutdown(signum, frame):  #noqa: ARG001
+def handle_shutdown(signum, frame):  # noqa: ARG001
     print("Shutting down gracefully...")
     sys.exit(0)
 
