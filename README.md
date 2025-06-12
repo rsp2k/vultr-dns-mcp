@@ -15,27 +15,6 @@
 
 ---
 
-## 🤖 AI Assistant Integration
-
-### Claude Integration
-
-Add to your `~/.config/Claude/claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "vultr-dns": {
-      "command": "uvx",
-      "args": ["vultr-dns-mcp"],
-      "env": {
-        "VULTR_API_KEY": "your_vultr_api_key_here"
-      }
-    }
-  }
-}
-```
----
-
 ## ✨ Features
 
 <table>
@@ -85,16 +64,6 @@ Add to your `~/.config/Claude/claude_desktop_config.json`:
 
 ## 🚀 Quick Start
 
-### Installation
-
-```bash
-# Install from PyPI
-pip install vultr-dns-mcp
-
-# Or install with development dependencies
-pip install vultr-dns-mcp[dev]
-```
-
 ### Get Your API Key
 
 Get your Vultr API key from the [Vultr Control Panel](https://my.vultr.com/settings/#settingsapi).
@@ -103,13 +72,25 @@ Get your Vultr API key from the [Vultr Control Panel](https://my.vultr.com/setti
 export VULTR_API_KEY="your_vultr_api_key_here"
 ```
 
-### Start the MCP Server
+### 🤖 AI Assistant Integration
 
-```bash
-# Start the MCP server for AI assistant integration
-vultr-dns-mcp server
+#### Claude Integration
+
+Add to your `~/.config/Claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "vultr-dns": {
+      "command": "uvx",
+      "args": ["vultr-dns-mcp"],
+      "env": {
+        "VULTR_API_KEY": "your_vultr_api_key_here"
+      }
+    }
+  }
+}
 ```
-
 ---
 
 ## 🛠️ CLI Usage
@@ -177,20 +158,6 @@ The server provides comprehensive MCP resources and tools that any MCP-compatibl
 
 ---
 
-
-### Error Handling
-
-All operations include comprehensive error handling:
-
-```python
-result = await client.add_a_record("example.com", "www", "192.168.1.100")
-if "error" in result:
-    print(f"Error: {result['error']}")
-else:
-    print(f"Success: Created record {result['id']}")
-```
-
----
 
 ## 🧪 Development
 
