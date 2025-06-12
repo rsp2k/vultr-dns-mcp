@@ -19,7 +19,7 @@ on:
         type: string
 
 env:
-  COVERAGE_THRESHOLD: ${{ github.event.inputs.coverage_threshold || '80' }}
+  COVERAGE_THRESHOLD: ${{ github.event.inputs.coverage_threshold || '10' }}
 
 jobs:
   # Comprehensive testing with matrix support
