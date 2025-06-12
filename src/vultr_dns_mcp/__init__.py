@@ -27,6 +27,18 @@ from ._version import __version__, __version_info__
 from .client import VultrDNSClient
 from .server import VultrDNSServer, create_mcp_server, run_server
 
+
+def main():
+    """MCP Time Server - Time and timezone conversion functionality for MCP"""
+    import asyncio
+
+    asyncio.run(run_server())
+
+
+if __name__ == "__main__":
+    main()
+
+
 __all__ = [
     "VultrDNSClient",
     "VultrDNSServer",
@@ -34,6 +46,7 @@ __all__ = [
     "__version_info__",
     "create_mcp_server",
     "run_server",
+    "main",
 ]
 
 # Package metadata
