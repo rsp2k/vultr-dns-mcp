@@ -203,7 +203,6 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "slow: Tests that take a long time to run")
     config.addinivalue_line("markers", "network: Tests that require network access")
     config.addinivalue_line("markers", "api: Tests that interact with the Vultr API")
-    config.addinivalue_line("markers", "cli: Tests for command-line interface")
 
 
 # Pytest collection hooks
@@ -214,10 +213,6 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if asyncio.iscoroutinefunction(item.function):
             item.add_marker(pytest.mark.slow)
-
-        # Add markers based on test name patterns
-        if "test_cli" in item.name or "cli" in str(item.fspath):
-            item.add_marker(pytest.mark.cli)
 
         if "integration" in item.name:
             item.add_marker(pytest.mark.integration)

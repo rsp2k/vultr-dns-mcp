@@ -1,4 +1,5 @@
 """Version information for vultr-dns-mcp package."""
+
 try:
     from importlib.metadata import version
 except ImportError:

@@ -8,7 +8,6 @@ This directory contains comprehensive tests for the vultr-dns-mcp package.
 
 - `test_package_validation.py` - Basic package validation and import tests
 - `test_server.py` - Server functionality and MCP integration tests  
-- `test_cli.py` - Command-line interface tests
 - `conftest.py` - Shared fixtures and pytest configuration
 - `__init__.py` - Package initialization
 
@@ -59,8 +58,6 @@ pytest tests/test_package_validation.py -v
 # Server tests
 pytest tests/test_server.py -v
 
-# CLI tests
-pytest tests/test_cli.py -v
 ```
 
 ## Test Configuration

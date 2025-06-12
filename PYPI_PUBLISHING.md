@@ -38,7 +38,7 @@ The workflow uses [PyPI's trusted publishing](https://docs.pypi.org/trusted-publ
 
 ## 🚀 How to Publish
 
-### Automatic Publishing (Recommended)
+### Automatic Publishing
 
 1. **Update the version** in `pyproject.toml`:
    ```toml
@@ -130,20 +130,6 @@ The workflow automatically extracts changelog entries. Format your `CHANGELOG.md
 - Critical bug fix
 ```
 
-## 🔧 Alternative: API Token Method
-
-If you prefer using API tokens instead of trusted publishing:
-
-1. **Generate API tokens**:
-   - PyPI: https://pypi.org/manage/account/token/
-   - TestPyPI: https://test.pypi.org/manage/account/token/
-
-2. **Add secrets to repository**:
-   - Go to repository **Settings** → **Secrets and variables** → **Actions**
-   - Add `PYPI_API_TOKEN` and `TEST_PYPI_API_TOKEN`
-
-3. **Modify the workflow** to use tokens instead of trusted publishing.
-
 ## 🛠️ Troubleshooting
 
 ### Common Issues
@@ -201,5 +187,3 @@ After publishing, monitor:
 3. Monitor the workflow execution
 4. Set up branch protection rules if desired
 5. Consider adding dependabot for automated dependency updates
-
-The workflow is designed to be secure, robust, and easy to use. It follows Python packaging best practices and provides comprehensive validation before publishing.

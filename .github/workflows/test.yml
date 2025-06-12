@@ -104,7 +104,6 @@ jobs:
         import vultr_dns_mcp
         from vultr_dns_mcp import server
         from vultr_dns_mcp import client  
-        from vultr_dns_mcp import cli
         print('✅ All core modules import successfully')
         
         # Test server creation
@@ -132,9 +131,6 @@ jobs:
         echo "🌐 MCP protocol tests..."
         pytest tests/ -v -m "mcp" --tb=line || echo "No MCP tests marked"
         
-        echo "💻 CLI tests..."
-        pytest tests/ -v -m "cli" --tb=line || echo "No CLI tests marked"
-    
     - name: Upload coverage reports
       if: matrix.python-version == '3.11'
       uses: codecov/codecov-action@v3
@@ -227,10 +223,6 @@ jobs:
         python -c "
         import vultr_dns_mcp
         print(f'✅ Installed version: {vultr_dns_mcp.__version__}')
-        
-        # Test CLI
-        from vultr_dns_mcp.cli import main
-        print('✅ CLI import successful')
         
         # Test server creation
         from vultr_dns_mcp.server import create_mcp_server
