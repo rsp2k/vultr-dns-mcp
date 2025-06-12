@@ -131,8 +131,8 @@ Add to your `~/.config/claude/mcp.json`:
 {
   "mcpServers": {
     "vultr-dns": {
-      "command": "vultr-dns-mcp",
-      "args": ["server"],
+      "command": "uvx",
+      "args": ["svultr-dns-mcp"],
       "env": {
         "VULTR_API_KEY": "your_vultr_api_key_here"
       }
