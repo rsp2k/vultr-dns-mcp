@@ -38,8 +38,8 @@ class TestCLICommands:
         """Set up test environment."""
         self.runner = CliRunner()
 
-    @patch("vultr_dns_mcp.cli.create_mcp_server")
-    @patch("vultr_dns_mcp.cli.stdio_server")
+    @patch("vultr_dns_mcp.server.create_mcp_server")
+    @patch("vultr_dns_mcp.server.stdio_server")
     def test_main_with_api_key(self, mock_stdio, mock_create_server):
         """Test main command with API key."""
         from vultr_dns_mcp.cli import main
@@ -49,8 +49,8 @@ class TestCLICommands:
         mock_create_server.return_value = mock_server
 
         # Mock stdio_server context manager
-        mock_stdio.return_value.__enter__ = MagicMock()
-        mock_stdio.return_value.__exit__ = MagicMock()
+        mock_stdio.return_value.__aenter__ = MagicMock()
+        mock_stdio.return_value.__aexit__ = MagicMock()
 
         # Test with API key argument
         result = self.runner.invoke(main, ["--api-key", "test-key"])
@@ -68,9 +68,9 @@ class TestCLICommands:
 
     def test_server_command_help(self):
         """Test server command help."""
-        from vultr_dns_mcp.cli import server_command
+        from vultr_dns_mcp.cli import main
 
-        result = self.runner.invoke(server_command, ["--help"])
+        result = self.runner.invoke(main, ["server", "--help"])
         assert result.exit_code == 0
         assert "Usage:" in result.output
 
@@ -95,8 +95,8 @@ class TestCLIEnvironment:
         )
 
     @patch.dict(os.environ, {"VULTR_API_KEY": "test-env-key"})
-    @patch("vultr_dns_mcp.cli.create_mcp_server")
-    @patch("vultr_dns_mcp.cli.stdio_server")
+    @patch("vultr_dns_mcp.server.create_mcp_server")
+    @patch("vultr_dns_mcp.server.stdio_server")
     def test_api_key_from_env_var(self, mock_stdio, mock_create_server):
         """Test API key from environment variable."""
         from vultr_dns_mcp.cli import main
@@ -106,8 +106,8 @@ class TestCLIEnvironment:
         mock_create_server.return_value = mock_server
 
         # Mock stdio_server
-        mock_stdio.return_value.__enter__ = MagicMock()
-        mock_stdio.return_value.__exit__ = MagicMock()
+        mock_stdio.return_value.__aenter__ = MagicMock()
+        mock_stdio.return_value.__aexit__ = MagicMock()
 
         runner = CliRunner()
         runner.invoke(main, [])
@@ -143,7 +143,7 @@ class TestCLIIntegration:
         assert result.exit_code != 0
 
     @pytest.mark.integration
-    @patch("vultr_dns_mcp.cli.create_mcp_server")
+    @patch("vultr_dns_mcp.server.create_mcp_server")
     def test_server_creation_error_handling(self, mock_create_server):
         """Test server creation error handling."""
         from vultr_dns_mcp.cli import main
