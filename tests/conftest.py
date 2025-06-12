@@ -1,10 +1,10 @@
 """Pytest configuration and shared fixtures."""
 
-import pytest
 import asyncio
 import os
 from unittest.mock import AsyncMock, MagicMock
-from pathlib import Path
+
+import pytest
 
 
 @pytest.fixture
@@ -17,59 +17,67 @@ def mock_api_key():
 def mock_vultr_client():
     """Provide a mock VultrDNSServer client."""
     client = MagicMock()
-    
+
     # Mock async methods to return AsyncMock
-    client.list_domains = AsyncMock(return_value={
-        "domains": [
-            {"domain": "example.com", "status": "active"},
-            {"domain": "test.com", "status": "active"}
-        ]
-    })
-    
-    client.get_domain = AsyncMock(return_value={
-        "domain": {"domain": "example.com", "status": "active"}
-    })
-    
-    client.create_domain = AsyncMock(return_value={
-        "domain": {"domain": "newdomain.com", "status": "active"}
-    })
-    
+    client.list_domains = AsyncMock(
+        return_value={
+            "domains": [
+                {"domain": "example.com", "status": "active"},
+                {"domain": "test.com", "status": "active"},
+            ]
+        }
+    )
+
+    client.get_domain = AsyncMock(
+        return_value={"domain": {"domain": "example.com", "status": "active"}}
+    )
+
+    client.create_domain = AsyncMock(
+        return_value={"domain": {"domain": "newdomain.com", "status": "active"}}
+    )
+
     client.delete_domain = AsyncMock(return_value={})
-    
-    client.list_records = AsyncMock(return_value={
-        "records": [
-            {
+
+    client.list_records = AsyncMock(
+        return_value={
+            "records": [
+                {
+                    "id": "123",
+                    "type": "A",
+                    "name": "www",
+                    "data": "192.168.1.1",
+                    "ttl": 300,
+                }
+            ]
+        }
+    )
+
+    client.create_record = AsyncMock(
+        return_value={
+            "record": {
+                "id": "456",
+                "type": "A",
+                "name": "www",
+                "data": "192.168.1.100",
+                "ttl": 300,
+            }
+        }
+    )
+
+    client.update_record = AsyncMock(
+        return_value={
+            "record": {
                 "id": "123",
                 "type": "A",
                 "name": "www",
-                "data": "192.168.1.1",
-                "ttl": 300
+                "data": "192.168.1.200",
+                "ttl": 300,
             }
-        ]
-    })
-    
-    client.create_record = AsyncMock(return_value={
-        "record": {
-            "id": "456",
-            "type": "A", 
-            "name": "www",
-            "data": "192.168.1.100",
-            "ttl": 300
         }
-    })
-    
-    client.update_record = AsyncMock(return_value={
-        "record": {
-            "id": "123",
-            "type": "A",
-            "name": "www", 
-            "data": "192.168.1.200",
-            "ttl": 300
-        }
-    })
-    
+    )
+
     client.delete_record = AsyncMock(return_value={})
-    
+
     return client
 
 
@@ -77,25 +85,26 @@ def mock_vultr_client():
 def mcp_server(mock_api_key):
     """Provide an MCP server instance for testing."""
     from vultr_dns_mcp.server import create_mcp_server
+
     return create_mcp_server(mock_api_key)
 
 
 @pytest.fixture
 def clean_environment():
     """Clean environment variables for testing."""
-    original_api_key = os.environ.get('VULTR_API_KEY')
-    
+    original_api_key = os.environ.get("VULTR_API_KEY")
+
     # Clean up before test
-    if 'VULTR_API_KEY' in os.environ:
-        del os.environ['VULTR_API_KEY']
-    
+    if "VULTR_API_KEY" in os.environ:
+        del os.environ["VULTR_API_KEY"]
+
     yield
-    
+
     # Restore after test
     if original_api_key:
-        os.environ['VULTR_API_KEY'] = original_api_key
-    elif 'VULTR_API_KEY' in os.environ:
-        del os.environ['VULTR_API_KEY']
+        os.environ["VULTR_API_KEY"] = original_api_key
+    elif "VULTR_API_KEY" in os.environ:
+        del os.environ["VULTR_API_KEY"]
 
 
 @pytest.fixture
@@ -137,15 +146,15 @@ def sample_dns_records():
             "name": "@",
             "data": "192.168.1.1",
             "ttl": 300,
-            "priority": None
+            "priority": None,
         },
         {
-            "id": "record-2", 
+            "id": "record-2",
             "type": "A",
             "name": "www",
             "data": "192.168.1.1",
             "ttl": 300,
-            "priority": None
+            "priority": None,
         },
         {
             "id": "record-3",
@@ -153,7 +162,7 @@ def sample_dns_records():
             "name": "@",
             "data": "mail.example.com",
             "ttl": 3600,
-            "priority": 10
+            "priority": 10,
         },
         {
             "id": "record-4",
@@ -161,8 +170,8 @@ def sample_dns_records():
             "name": "blog",
             "data": "example.com",
             "ttl": 300,
-            "priority": None
-        }
+            "priority": None,
+        },
     ]
 
 
@@ -173,61 +182,49 @@ def sample_domains():
         {
             "domain": "example.com",
             "date_created": "2023-01-01T00:00:00+00:00",
-            "dns_sec": "disabled"
+            "dns_sec": "disabled",
         },
         {
             "domain": "test.com",
-            "date_created": "2023-01-02T00:00:00+00:00", 
-            "dns_sec": "enabled"
-        }
+            "date_created": "2023-01-02T00:00:00+00:00",
+            "dns_sec": "enabled",
+        },
     ]
 
 
 # Configure pytest markers
 def pytest_configure(config):
     """Configure pytest with custom markers."""
-    config.addinivalue_line(
-        "markers", "unit: Unit tests for individual components"
-    )
+    config.addinivalue_line("markers", "unit: Unit tests for individual components")
     config.addinivalue_line(
         "markers", "integration: Integration tests requiring external services"
     )
-    config.addinivalue_line(
-        "markers", "mcp: MCP protocol specific tests"
-    )
-    config.addinivalue_line(
-        "markers", "slow: Tests that take a long time to run"
-    )
-    config.addinivalue_line(
-        "markers", "network: Tests that require network access"
-    )
-    config.addinivalue_line(
-        "markers", "api: Tests that interact with the Vultr API"
-    )
-    config.addinivalue_line(
-        "markers", "cli: Tests for command-line interface"
-    )
+    config.addinivalue_line("markers", "mcp: MCP protocol specific tests")
+    config.addinivalue_line("markers", "slow: Tests that take a long time to run")
+    config.addinivalue_line("markers", "network: Tests that require network access")
+    config.addinivalue_line("markers", "api: Tests that interact with the Vultr API")
+    config.addinivalue_line("markers", "cli: Tests for command-line interface")
 
 
 # Pytest collection hooks
 def pytest_collection_modifyitems(config, items):
     """Modify test collection to add markers and skip conditions."""
-    
+
     # Add slow marker to async tests by default
     for item in items:
         if asyncio.iscoroutinefunction(item.function):
             item.add_marker(pytest.mark.slow)
-        
+
         # Add markers based on test name patterns
         if "test_cli" in item.name or "cli" in str(item.fspath):
             item.add_marker(pytest.mark.cli)
-        
+
         if "integration" in item.name:
             item.add_marker(pytest.mark.integration)
-        
+
         if "mcp" in item.name:
             item.add_marker(pytest.mark.mcp)
-        
+
         if "api" in item.name or "vultr" in item.name:
             item.add_marker(pytest.mark.api)
 

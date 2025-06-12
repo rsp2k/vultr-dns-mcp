@@ -23,17 +23,17 @@ Main functions:
     run_server: Convenience function to run the MCP server
 """
 
-from .server import VultrDNSServer, create_mcp_server, run_server
-from .client import VultrDNSClient
 from ._version import __version__, __version_info__
+from .client import VultrDNSClient
+from .server import VultrDNSServer, create_mcp_server, run_server
 
 __all__ = [
-    "VultrDNSServer",
     "VultrDNSClient",
-    "create_mcp_server",
-    "run_server",
+    "VultrDNSServer",
     "__version__",
     "__version_info__",
+    "create_mcp_server",
+    "run_server",
 ]
 
 # Package metadata

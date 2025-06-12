@@ -11,7 +11,8 @@ This script demonstrates various ways to use the package:
 
 import asyncio
 import os
-from vultr_dns_mcp import VultrDNSClient, VultrDNSServer, create_mcp_server
+
+from vultr_dns_mcp import VultrDNSClient, create_mcp_server
 
 
 async def client_example():
@@ -88,7 +89,7 @@ async def validation_example():
 
     # Create a test server instance for validation (won't make API calls)
     try:
-        server = create_mcp_server("test-key-for-validation")
+        create_mcp_server("test-key-for-validation")
 
         # Test validation examples
         test_cases = [
