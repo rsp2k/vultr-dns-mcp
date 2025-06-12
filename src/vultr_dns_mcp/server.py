@@ -34,6 +34,7 @@ class VultrDNSServer:
             api_key: Your Vultr API key
         """
         self.api_key = api_key
+        self.base_url = self.API_BASE  # Add base_url instance attribute for tests
         self.headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
@@ -43,7 +44,7 @@ class VultrDNSServer:
         self, method: str, endpoint: str, data: Optional[Dict] = None
     ) -> Dict[str, Any]:
         """Make an HTTP request to the Vultr API."""
-        url = f"{self.API_BASE}{endpoint}"
+        url = f"{self.base_url}{endpoint}"
 
         async with httpx.AsyncClient() as client:
             response = await client.request(
@@ -598,7 +599,7 @@ def create_mcp_server(api_key: Optional[str] = None) -> Server:
                         )
 
                 elif record_type == "AAAA":
-                    if "::" in data and data.count("::") > 1:
+                    if ":" in data and data.count("::") > 1:
                         validation_result["valid"] = False
                         validation_result["errors"].append(
                             "Invalid IPv6 address: multiple :: sequences"
