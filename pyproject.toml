@@ -76,7 +76,7 @@ Repository = "https://github.com/rsp2k/vultr-dns-mcp.git"
 Changelog = "https://github.com/rsp2k/vultr-dns-mcp/blob/main/CHANGELOG.md"
 
 [project.scripts]
-vultr-dns-mcp = "vultr_dns_mcp.server:run_server"
+vultr-dns-mcp = "vultr_dns_mcp:main"
 vultr-dns-server = "vultr_dns_mcp.cli:server_command"
 
 [tool.setuptools.packages.find]
