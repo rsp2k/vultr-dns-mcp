@@ -336,6 +336,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **[⬆ Back to Top](#-vultr-dns-mcp)**
 
-Made with ❤️ by the Vultr DNS MCP Team
+Made with ❤️ by rsp2k
 
 </div>
