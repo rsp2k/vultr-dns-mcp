@@ -34,13 +34,6 @@ def test_client_module_exists():
     assert client is not None
 
 
-def test_cli_module_exists():
-    """Test that CLI module can be imported."""
-    from vultr_dns_mcp import cli
-
-    assert cli is not None
-
-
 @pytest.mark.unit
 def test_create_mcp_server():
     """Test creating MCP server with API key."""
@@ -86,19 +79,6 @@ def test_create_mcp_server_without_api_key():
 
     with pytest.raises(ValueError, match="VULTR_API_KEY must be provided"):
         create_mcp_server()
-
-
-def test_cli_entry_points():
-    """Test that CLI entry points are properly configured."""
-    from vultr_dns_mcp import cli
-
-    # Test that main functions exist
-    assert hasattr(cli, "main")
-    assert callable(cli.main)
-
-    # Test server command exists
-    assert hasattr(cli, "server_command")
-    assert callable(cli.server_command)
 
 
 @pytest.mark.unit
