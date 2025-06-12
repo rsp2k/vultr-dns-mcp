@@ -89,29 +89,6 @@ export VULTR_API_KEY="your_vultr_api_key_here"
 vultr-dns-mcp server
 ```
 
-### Python Usage
-
-```python
-import asyncio
-from vultr_dns_mcp import VultrDNSClient
-
-async def main():
-    client = VultrDNSClient("your-api-key")
-    
-    # List all domains
-    domains = await client.domains()
-    print(f"Found {len(domains)} domains")
-    
-    # Add DNS records
-    await client.add_a_record("example.com", "www", "192.168.1.100")
-    await client.add_mx_record("example.com", "@", "mail.example.com", priority=10)
-    
-    # Set up basic website
-    await client.setup_basic_website("newdomain.com", "203.0.113.1")
-
-asyncio.run(main())
-```
-
 ---
 
 ## 🛠️ CLI Usage
@@ -197,36 +174,6 @@ The server provides comprehensive MCP resources and tools that any MCP-compatibl
 
 ---
 
-## 🔧 API Reference
-
-### Main Client Class
-
-```python
-client = VultrDNSClient(api_key)
-
-# Domain operations
-await client.domains()                    # List domains
-await client.domain("example.com")       # Get domain info  
-await client.add_domain(domain, ip)      # Create domain
-await client.remove_domain(domain)       # Delete domain
-
-# Record operations
-await client.records(domain)             # List records
-await client.add_record(domain, type, name, value, ttl, priority)
-await client.update_record(domain, record_id, type, name, value, ttl, priority) 
-await client.remove_record(domain, record_id)
-
-# Convenience methods
-await client.add_a_record(domain, name, ip, ttl)
-await client.add_cname_record(domain, name, target, ttl)
-await client.add_mx_record(domain, name, mail_server, priority, ttl)
-
-# Utilities
-await client.find_records_by_type(domain, record_type)
-await client.get_domain_summary(domain)
-await client.setup_basic_website(domain, ip)
-await client.setup_email(domain, mail_server, priority)
-```
 
 ### Error Handling
 
@@ -271,15 +218,16 @@ pytest tests/test_server.py -v
 ### Code Quality
 
 ```bash
-# Format code
-black src tests
-isort src tests
+# format
+black check --diff
 
-# Type checking  
-mypy src
+# lint
+ruff check src/
 
-# Linting
-flake8 src tests
+# Type checking TODO
+# mypy src
+
+
 ```
 
 ---
@@ -289,7 +237,7 @@ flake8 src tests
 - **[API Documentation](https://vultr-dns-mcp.readthedocs.io/)** - Complete API reference
 - **[MCP Protocol Guide](https://modelcontextprotocol.io/)** - Understanding MCP
 - **[Vultr API Docs](https://www.vultr.com/api/)** - Vultr DNS API reference
-- **[Examples](./examples/)** - Code examples and tutorials
+
 
 ---
 
