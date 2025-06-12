@@ -6,7 +6,6 @@ performing DNS operations directly from the command line.
 """
 
 import asyncio
-import os
 import sys
 from typing import Optional
 
@@ -40,13 +39,14 @@ def server(ctx: click.Context):
     if not api_key:
         click.echo("Error: VULTR_API_KEY is required", err=True)
         click.echo(
-            "Set it as an environment variable or use --api-key option", err=True
+            "Set it as an environment variable or use --api-key option",
+            err=True
         )
         sys.exit(1)
 
-    click.echo(f"🚀 Starting Vultr DNS MCP Server...")
+    click.echo("🚀 Starting Vultr DNS MCP Server...")
     click.echo(f"🔑 API Key: {api_key[:8]}...")
-    click.echo(f"🔄 Press Ctrl+C to stop")
+    click.echo("🔴 Press Ctrl+C to stop")
 
     try:
         asyncio.run(run_server(api_key))
@@ -125,13 +125,16 @@ def domain_info(ctx: click.Context, domain: str):
             config = summary["configuration"]
             click.echo("Configuration:")
             click.echo(
-                f"  • Root domain record: {'✅' if config['has_root_record'] else '❌'}"
+                f"  • Root domain record: "
+                f"{'✅' if config['has_root_record'] else '❌'}"
             )
             click.echo(
-                f"  • WWW subdomain: {'✅' if config['has_www_subdomain'] else '❌'}"
+                f"  • WWW subdomain: "
+                f"{'✅' if config['has_www_subdomain'] else '❌'}"
             )
             click.echo(
-                f"  • Email setup: {'✅' if config['has_email_setup'] else '❌'}"
+                f"  • Email setup: "
+                f"{'✅' if config['has_email_setup'] else '❌'}"
             )
 
         except Exception as e:
@@ -192,7 +195,9 @@ def list_records(ctx: click.Context, domain: str, record_type: Optional[str]):
         client = VultrDNSClient(api_key)
         try:
             if record_type:
-                records_list = await client.find_records_by_type(domain, record_type)
+                records_list = await client.find_records_by_type(
+                    domain, record_type
+                )
             else:
                 records_list = await client.records(domain)
 
@@ -209,7 +214,8 @@ def list_records(ctx: click.Context, domain: str, record_type: Optional[str]):
                 ttl = record.get("ttl", "Unknown")
 
                 click.echo(
-                    f"  • [{record_id}] {r_type:6} {name:20} ➜ {data} (TTL: {ttl})"
+                    f"  • [{record_id}] {r_type:6} {name:20} "
+                    f"➜ {data} (TTL: {ttl})"
                 )
 
         except Exception as e:
@@ -255,7 +261,8 @@ def add_record(
 
             record_id = result.get("id", "Unknown")
             click.echo(
-                f"✅ Created {record_type} record [{record_id}]: {name} ➜ {value}"
+                f"✅ Created {record_type} record [{record_id}]: "
+                f"{name} ➜ {value}"
             )
 
         except Exception as e:
@@ -298,11 +305,17 @@ def delete_record(ctx: click.Context, domain: str, record_id: str):
 @cli.command()
 @click.argument("domain")
 @click.argument("ip")
-@click.option("--include-www/--no-www", default=True, help="Include www subdomain")
+@click.option(
+    "--include-www/--no-www", default=True, help="Include www subdomain"
+)
 @click.option("--ttl", type=int, help="TTL for records")
 @click.pass_context
 def setup_website(
-    ctx: click.Context, domain: str, ip: str, include_www: bool, ttl: Optional[int]
+    ctx: click.Context,
+    domain: str,
+    ip: str,
+    include_www: bool,
+    ttl: Optional[int]
 ):
     """Set up basic DNS records for a website."""
     api_key = ctx.obj.get("api_key")
@@ -313,7 +326,9 @@ def setup_website(
     async def _setup_website():
         client = VultrDNSClient(api_key)
         try:
-            result = await client.setup_basic_website(domain, ip, include_www, ttl)
+            result = await client.setup_basic_website(
+                domain, ip, include_www, ttl
+            )
 
             click.echo(f"Setting up website for {domain}:")
 
@@ -326,7 +341,7 @@ def setup_website(
             if result["created_records"] and not result["errors"]:
                 click.echo(f"🎉 Website setup complete for {domain}")
             elif result["errors"]:
-                click.echo(f"⚠️  Setup completed with some errors")
+                click.echo("⚠️  Setup completed with some errors")
 
         except Exception as e:
             click.echo(f"Error: {e}", err=True)
@@ -342,7 +357,11 @@ def setup_website(
 @click.option("--ttl", type=int, help="TTL for records")
 @click.pass_context
 def setup_email(
-    ctx: click.Context, domain: str, mail_server: str, priority: int, ttl: Optional[int]
+    ctx: click.Context,
+    domain: str,
+    mail_server: str,
+    priority: int,
+    ttl: Optional[int]
 ):
     """Set up basic email DNS records."""
     api_key = ctx.obj.get("api_key")
@@ -366,7 +385,7 @@ def setup_email(
             if result["created_records"] and not result["errors"]:
                 click.echo(f"📧 Email setup complete for {domain}")
             elif result["errors"]:
-                click.echo(f"⚠️  Setup completed with some errors")
+                click.echo("⚠️  Setup completed with some errors")
 
         except Exception as e:
             click.echo(f"Error: {e}", err=True)
