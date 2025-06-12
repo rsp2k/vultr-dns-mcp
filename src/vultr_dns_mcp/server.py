@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Optional
 import httpx
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
-from mcp.types import Resource, Tool, TextContent
+from mcp.types import Resource, TextContent, Tool
 from pydantic import BaseModel
 
 
