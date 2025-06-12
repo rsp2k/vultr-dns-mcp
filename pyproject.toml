@@ -7,7 +7,7 @@ name = "vultr-dns-mcp"
 version = "1.0.2"
 description = "A comprehensive Model Context Protocol (MCP) server for managing Vultr DNS records"
 readme = "README.md"
-license = {text = "MIT"}
+license = "MIT"
 authors = [
     {name = "Ryan Malloy", email = "ryan@supported.systems"}
 ]
@@ -27,7 +27,6 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Intended Audience :: System Administrators",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
