@@ -64,7 +64,7 @@ jobs:
         # Run code formatting and linting
         black --check --diff src/
         isort --check-only --diff src/
-        flake8 src/
+        ruff check src/
         mypy src/
     
     - name: Run comprehensive test suite
