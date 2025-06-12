@@ -26,7 +26,7 @@ Add to your `~/.config/Claude/claude_desktop_config.json`:
   "mcpServers": {
     "vultr-dns": {
       "command": "uvx",
-      "args": ["svultr-dns-mcp"],
+      "args": ["vultr-dns-mcp"],
       "env": {
         "VULTR_API_KEY": "your_vultr_api_key_here"
       }
