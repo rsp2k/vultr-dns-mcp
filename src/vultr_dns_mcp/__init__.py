@@ -1,9 +1,9 @@
 """
 Vultr DNS MCP - A Model Context Protocol server for Vultr DNS management.
 
-This package provides a comprehensive MCP server for managing DNS records through
-the Vultr API. It includes tools for domain management, DNS record operations,
-configuration analysis, and validation.
+This package provides a comprehensive MCP server for managing DNS records
+through the Vultr API. It includes tools for domain management, DNS record
+operations, configuration analysis, and validation.
 
 Example usage:
     from vultr_dns_mcp import VultrDNSServer, create_mcp_server
