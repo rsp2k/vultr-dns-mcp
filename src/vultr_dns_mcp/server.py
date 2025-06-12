@@ -4,16 +4,20 @@ Vultr DNS MCP Server Implementation.
 This module contains the main VultrDNSServer class and MCP server implementation
 for managing DNS records through the Vultr API.
 """
-
+import asyncio
 import os
 import re
+import signal
+import sys
 from typing import Any
 
 import httpx
-from mcp.server import Server
+
+from mcp.server import Server, InitializationOptions, NotificationOptions
 from mcp.server.stdio import stdio_server
 from mcp.types import Resource, TextContent, Tool
 
+from ._version import __version__
 
 class VultrDNSServer:
     """
@@ -741,6 +745,27 @@ async def run_server(api_key: str | None = None) -> None:
     Args:
         api_key: Vultr API key. If not provided, will read from VULTR_API_KEY env var.
     """
+    signal.signal(signal.SIGINT, handle_shutdown)
+    signal.signal(signal.SIGTERM, handle_shutdown)
+
     server = create_mcp_server(api_key)
     async with stdio_server() as (read_stream, write_stream):
-        await server.run(read_stream, write_stream, None)
+        await server.run(
+            read_stream, write_stream,
+            InitializationOptions(
+                server_name="vultr-dns-mcp",
+                server_version=__version__,
+                capabilities=server.get_capabilities(
+                    notification_options=NotificationOptions(),
+                    experimental_capabilities={},
+                )
+            )
+        )
+
+def handle_shutdown(signum, frame):
+    print("Shutting down gracefully...")
+    sys.exit(0)
+
+
+if __name__ == "__main__":
+    asyncio.run(run_server())
