@@ -15,6 +15,27 @@
 
 ---
 
+## 🤖 AI Assistant Integration
+
+### Claude Integration
+
+Add to your `~/.config/Claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "vultr-dns": {
+      "command": "uvx",
+      "args": ["svultr-dns-mcp"],
+      "env": {
+        "VULTR_API_KEY": "your_vultr_api_key_here"
+      }
+    }
+  }
+}
+```
+---
+
 ## ✨ Features
 
 <table>
@@ -121,25 +142,7 @@ vultr-dns-mcp setup-email example.com mail.example.com
 
 ---
 
-## 🤖 AI Assistant Integration
 
-### Claude Integration
-
-Add to your `~/.config/claude/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "vultr-dns": {
-      "command": "uvx",
-      "args": ["svultr-dns-mcp"],
-      "env": {
-        "VULTR_API_KEY": "your_vultr_api_key_here"
-      }
-    }
-  }
-}
-```
 
 ### Available MCP Tools
 
