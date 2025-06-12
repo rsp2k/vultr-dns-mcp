@@ -604,7 +604,7 @@ def create_mcp_server(api_key: str | None = None) -> Server:
                         )
 
                 elif record_type == "CNAME":
-                    if name == "@" or name == "":
+                    if name in {"@", ""}:
                         validation_result["valid"] = False
                         validation_result["errors"].append(
                             "CNAME records cannot be used for root domain (@)"

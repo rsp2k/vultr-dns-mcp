@@ -89,7 +89,7 @@ async def validation_example():
 
     # Create a test server instance for validation (won't make API calls)
     try:
-        server = create_mcp_server("test-key-for-validation")
+        create_mcp_server("test-key-for-validation")
 
         # Test validation examples
         test_cases = [

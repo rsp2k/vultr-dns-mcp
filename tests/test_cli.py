@@ -110,7 +110,7 @@ class TestCLIEnvironment:
         mock_stdio.return_value.__exit__ = MagicMock()
 
         runner = CliRunner()
-        result = runner.invoke(main, [])
+        runner.invoke(main, [])
 
         # Should be able to get API key from environment
         mock_create_server.assert_called()

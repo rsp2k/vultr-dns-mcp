@@ -32,7 +32,7 @@ def get_version_from_pyproject() -> str:
     if not pyproject_path.exists():
         raise FileNotFoundError("pyproject.toml not found")
 
-    with open(pyproject_path, "rb") as f:
+    with Path.open(pyproject_path, "rb") as f:
         data = tomllib.load(f)
 
     return data["project"]["version"]
@@ -44,7 +44,7 @@ def get_version_from_version_py() -> str:
     if not version_path.exists():
         raise FileNotFoundError("src/vultr_dns_mcp/_version.py not found")
 
-    with open(version_path) as f:
+    with Path.open(version_path) as f:
         content = f.read()
 
     match = re.search(r'__version__\s*=\s*["\']([^"\']+)["\']', content)
@@ -64,7 +64,7 @@ __version__ = "{new_version}"
 __version_info__ = tuple(int(i) for i in __version__.split(".") if i.isdigit())
 '''
 
-    with open(version_path, "w") as f:
+    with Path.open(version_path, "w") as f:
         f.write(content)
 
     print(f"✅ Updated _version.py to {new_version}")
@@ -74,7 +74,7 @@ def update_pyproject_toml(new_version: str) -> None:
     """Update version in pyproject.toml."""
     pyproject_path = Path("pyproject.toml")
 
-    with open(pyproject_path) as f:
+    with Path.open(pyproject_path) as f:
         content = f.read()
 
     # Replace version line
@@ -82,7 +82,7 @@ def update_pyproject_toml(new_version: str) -> None:
     replacement = f'\\1"{new_version}"'
     new_content = re.sub(pattern, replacement, content)
 
-    with open(pyproject_path, "w") as f:
+    with Path.open(pyproject_path, "w") as f:
         f.write(new_content)
 
     print(f"✅ Updated pyproject.toml to {new_version}")
