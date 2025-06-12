@@ -23,12 +23,15 @@ class TestVultrDNSServer:
         """Test successful API request."""
         server = VultrDNSServer(mock_api_key)
         
-        mock_response = AsyncMock()
-        mock_response.status_code = 200
-        mock_response.json.return_value = {"test": "data"}
-        
         with patch('httpx.AsyncClient') as mock_client:
-            mock_client.return_value.__aenter__.return_value.request.return_value = mock_response
+            mock_response = AsyncMock()
+            mock_response.status_code = 200
+            mock_response.json = AsyncMock(return_value={"test": "data"})
+            
+            # Properly mock the async context manager
+            mock_client.return_value.__aenter__ = AsyncMock(return_value=mock_client.return_value)
+            mock_client.return_value.__aexit__ = AsyncMock(return_value=None)
+            mock_client.return_value.request = AsyncMock(return_value=mock_response)
             
             result = await server._make_request("GET", "/test")
             assert result == {"test": "data"}
@@ -38,12 +41,14 @@ class TestVultrDNSServer:
         """Test API request with 201 Created status."""
         server = VultrDNSServer(mock_api_key)
         
-        mock_response = AsyncMock()
-        mock_response.status_code = 201
-        mock_response.json.return_value = {"created": "resource"}
-        
         with patch('httpx.AsyncClient') as mock_client:
-            mock_client.return_value.__aenter__.return_value.request.return_value = mock_response
+            mock_response = AsyncMock()
+            mock_response.status_code = 201
+            mock_response.json = AsyncMock(return_value={"created": "resource"})
+            
+            mock_client.return_value.__aenter__ = AsyncMock(return_value=mock_client.return_value)
+            mock_client.return_value.__aexit__ = AsyncMock(return_value=None)
+            mock_client.return_value.request = AsyncMock(return_value=mock_response)
             
             result = await server._make_request("POST", "/test", {"data": "value"})
             assert result == {"created": "resource"}
@@ -53,11 +58,13 @@ class TestVultrDNSServer:
         """Test API request with 204 No Content status."""
         server = VultrDNSServer(mock_api_key)
         
-        mock_response = AsyncMock()
-        mock_response.status_code = 204
-        
         with patch('httpx.AsyncClient') as mock_client:
-            mock_client.return_value.__aenter__.return_value.request.return_value = mock_response
+            mock_response = AsyncMock()
+            mock_response.status_code = 204
+            
+            mock_client.return_value.__aenter__ = AsyncMock(return_value=mock_client.return_value)
+            mock_client.return_value.__aexit__ = AsyncMock(return_value=None)
+            mock_client.return_value.request = AsyncMock(return_value=mock_response)
             
             result = await server._make_request("DELETE", "/test")
             assert result == {}
@@ -67,12 +74,14 @@ class TestVultrDNSServer:
         """Test API request with 400 Bad Request error."""
         server = VultrDNSServer(mock_api_key)
         
-        mock_response = AsyncMock()
-        mock_response.status_code = 400
-        mock_response.text = "Bad Request"
-        
         with patch('httpx.AsyncClient') as mock_client:
-            mock_client.return_value.__aenter__.return_value.request.return_value = mock_response
+            mock_response = AsyncMock()
+            mock_response.status_code = 400
+            mock_response.text = "Bad Request"
+            
+            mock_client.return_value.__aenter__ = AsyncMock(return_value=mock_client.return_value)
+            mock_client.return_value.__aexit__ = AsyncMock(return_value=None)
+            mock_client.return_value.request = AsyncMock(return_value=mock_response)
             
             with pytest.raises(Exception) as exc_info:
                 await server._make_request("GET", "/test")
@@ -84,12 +93,14 @@ class TestVultrDNSServer:
         """Test API request with 401 Unauthorized error."""
         server = VultrDNSServer(mock_api_key)
         
-        mock_response = AsyncMock()
-        mock_response.status_code = 401
-        mock_response.text = "Unauthorized"
-        
         with patch('httpx.AsyncClient') as mock_client:
-            mock_client.return_value.__aenter__.return_value.request.return_value = mock_response
+            mock_response = AsyncMock()
+            mock_response.status_code = 401
+            mock_response.text = "Unauthorized"
+            
+            mock_client.return_value.__aenter__ = AsyncMock(return_value=mock_client.return_value)
+            mock_client.return_value.__aexit__ = AsyncMock(return_value=None)
+            mock_client.return_value.request = AsyncMock(return_value=mock_response)
             
             with pytest.raises(Exception) as exc_info:
                 await server._make_request("GET", "/test")
@@ -101,12 +112,14 @@ class TestVultrDNSServer:
         """Test API request with 500 Internal Server Error."""
         server = VultrDNSServer(mock_api_key)
         
-        mock_response = AsyncMock()
-        mock_response.status_code = 500
-        mock_response.text = "Internal Server Error"
-        
         with patch('httpx.AsyncClient') as mock_client:
-            mock_client.return_value.__aenter__.return_value.request.return_value = mock_response
+            mock_response = AsyncMock()
+            mock_response.status_code = 500
+            mock_response.text = "Internal Server Error"
+            
+            mock_client.return_value.__aenter__ = AsyncMock(return_value=mock_client.return_value)
+            mock_client.return_value.__aexit__ = AsyncMock(return_value=None)
+            mock_client.return_value.request = AsyncMock(return_value=mock_response)
             
             with pytest.raises(Exception) as exc_info:
                 await server._make_request("GET", "/test")
@@ -441,12 +454,14 @@ class TestErrorScenarios:
         """Test handling of rate limit error."""
         server = VultrDNSServer(mock_api_key)
         
-        mock_response = AsyncMock()
-        mock_response.status_code = 429
-        mock_response.text = "Rate limit exceeded"
-        
         with patch('httpx.AsyncClient') as mock_client:
-            mock_client.return_value.__aenter__.return_value.request.return_value = mock_response
+            mock_response = AsyncMock()
+            mock_response.status_code = 429
+            mock_response.text = "Rate limit exceeded"
+            
+            mock_client.return_value.__aenter__ = AsyncMock(return_value=mock_client.return_value)
+            mock_client.return_value.__aexit__ = AsyncMock(return_value=None)
+            mock_client.return_value.request = AsyncMock(return_value=mock_response)
             
             with pytest.raises(Exception) as exc_info:
                 await server._make_request("GET", "/domains")
