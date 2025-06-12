@@ -1,8 +1,9 @@
-"""Tests for MCP server functionality using FastMCP testing patterns."""
+"""Tests for MCP server functionality using official MCP testing patterns."""
 
 import pytest
 from unittest.mock import patch, AsyncMock
-from fastmcp import Client
+from mcp.client.session import ClientSession
+from mcp.client.stdio import stdio_client
 from vultr_dns_mcp.server import VultrDNSServer, create_mcp_server
 
 
@@ -38,8 +39,9 @@ class TestMCPTools:
         with patch('vultr_dns_mcp.server.VultrDNSServer', return_value=mock_vultr_client):
             server = create_mcp_server("test-api-key")
             
-            async with Client(server) as client:
-                result = await client.call_tool("list_dns_domains", {})
+            # For the official MCP package, we need to use ClientSession
+            async with ClientSession(server) as session:
+                result = await session.call_tool("list_dns_domains", {})
                 
                 assert isinstance(result, list)
                 # The result should be a list containing the response
@@ -55,8 +57,8 @@ class TestMCPTools:
         with patch('vultr_dns_mcp.server.VultrDNSServer', return_value=mock_vultr_client):
             server = create_mcp_server("test-api-key")
             
-            async with Client(server) as client:
-                result = await client.call_tool("get_dns_domain", {"domain": "example.com"})
+            async with ClientSession(server) as session:
+                result = await session.call_tool("get_dns_domain", {"domain": "example.com"})
                 
                 assert result is not None
                 mock_vultr_client.get_domain.assert_called_once_with("example.com")
@@ -67,8 +69,8 @@ class TestMCPTools:
         with patch('vultr_dns_mcp.server.VultrDNSServer', return_value=mock_vultr_client):
             server = create_mcp_server("test-api-key")
             
-            async with Client(server) as client:
-                result = await client.call_tool("create_dns_domain", {
+            async with ClientSession(server) as session:
+                result = await session.call_tool("create_dns_domain", {
                     "domain": "newdomain.com",
                     "ip": "192.168.1.100"
                 })
@@ -82,8 +84,8 @@ class TestMCPTools:
         with patch('vultr_dns_mcp.server.VultrDNSServer', return_value=mock_vultr_client):
             server = create_mcp_server("test-api-key")
             
-            async with Client(server) as client:
-                result = await client.call_tool("delete_dns_domain", {"domain": "example.com"})
+            async with ClientSession(server) as session:
+                result = await session.call_tool("delete_dns_domain", {"domain": "example.com"})
                 
                 assert result is not None
                 mock_vultr_client.delete_domain.assert_called_once_with("example.com")
@@ -94,8 +96,8 @@ class TestMCPTools:
         with patch('vultr_dns_mcp.server.VultrDNSServer', return_value=mock_vultr_client):
             server = create_mcp_server("test-api-key")
             
-            async with Client(server) as client:
-                result = await client.call_tool("list_dns_records", {"domain": "example.com"})
+            async with ClientSession(server) as session:
+                result = await session.call_tool("list_dns_records", {"domain": "example.com"})
                 
                 assert result is not None
                 mock_vultr_client.list_records.assert_called_once_with("example.com")
@@ -106,8 +108,8 @@ class TestMCPTools:
         with patch('vultr_dns_mcp.server.VultrDNSServer', return_value=mock_vultr_client):
             server = create_mcp_server("test-api-key")
             
-            async with Client(server) as client:
-                result = await client.call_tool("create_dns_record", {
+            async with ClientSession(server) as session:
+                result = await session.call_tool("create_dns_record", {
                     "domain": "example.com",
                     "record_type": "A",
                     "name": "www",
@@ -123,9 +125,9 @@ class TestMCPTools:
     @pytest.mark.asyncio
     async def test_validate_dns_record_tool(self, mcp_server):
         """Test the validate_dns_record MCP tool."""
-        async with Client(mcp_server) as client:
+        async with ClientSession(mcp_server) as session:
             # Test valid A record
-            result = await client.call_tool("validate_dns_record", {
+            result = await session.call_tool("validate_dns_record", {
                 "record_type": "A",
                 "name": "www", 
                 "data": "192.168.1.100",
@@ -138,9 +140,9 @@ class TestMCPTools:
     @pytest.mark.asyncio
     async def test_validate_dns_record_invalid(self, mcp_server):
         """Test the validate_dns_record tool with invalid data."""
-        async with Client(mcp_server) as client:
+        async with ClientSession(mcp_server) as session:
             # Test invalid A record (bad IP)
-            result = await client.call_tool("validate_dns_record", {
+            result = await session.call_tool("validate_dns_record", {
                 "record_type": "A",
                 "name": "www",
                 "data": "invalid-ip-address"
@@ -155,8 +157,8 @@ class TestMCPTools:
         with patch('vultr_dns_mcp.server.VultrDNSServer', return_value=mock_vultr_client):
             server = create_mcp_server("test-api-key")
             
-            async with Client(server) as client:
-                result = await client.call_tool("analyze_dns_records", {"domain": "example.com"})
+            async with ClientSession(server) as session:
+                result = await session.call_tool("analyze_dns_records", {"domain": "example.com"})
                 
                 assert result is not None
                 mock_vultr_client.list_records.assert_called_once_with("example.com")
@@ -172,9 +174,9 @@ class TestMCPResources:
         with patch('vultr_dns_mcp.server.VultrDNSServer', return_value=mock_vultr_client):
             server = create_mcp_server("test-api-key")
             
-            async with Client(server) as client:
+            async with ClientSession(server) as session:
                 # Get available resources
-                resources = await client.list_resources()
+                resources = await session.list_resources()
                 
                 # Check that domains resource is available
                 resource_uris = [r.uri for r in resources]
@@ -183,8 +185,8 @@ class TestMCPResources:
     @pytest.mark.asyncio
     async def test_capabilities_resource(self, mcp_server):
         """Test the vultr://capabilities resource."""
-        async with Client(mcp_server) as client:
-            resources = await client.list_resources()
+        async with ClientSession(mcp_server) as session:
+            resources = await session.list_resources()
             resource_uris = [r.uri for r in resources]
             assert "vultr://capabilities" in resource_uris
     
@@ -194,13 +196,13 @@ class TestMCPResources:
         with patch('vultr_dns_mcp.server.VultrDNSServer', return_value=mock_vultr_client):
             server = create_mcp_server("test-api-key")
             
-            async with Client(server) as client:
+            async with ClientSession(server) as session:
                 try:
-                    result = await client.read_resource("vultr://domains")
+                    result = await session.read_resource("vultr://domains")
                     assert result is not None
                     mock_vultr_client.list_domains.assert_called_once()
                 except Exception:
-                    # Resource reading might not be available in all FastMCP versions
+                    # Resource reading might not be available in all MCP versions
                     pass
 
 
@@ -217,8 +219,8 @@ class TestMCPToolErrors:
         with patch('vultr_dns_mcp.server.VultrDNSServer', return_value=mock_client):
             server = create_mcp_server("test-api-key")
             
-            async with Client(server) as client:
-                result = await client.call_tool("list_dns_domains", {})
+            async with ClientSession(server) as session:
+                result = await session.call_tool("list_dns_domains", {})
                 
                 # Should handle the error gracefully
                 assert result is not None
@@ -226,10 +228,10 @@ class TestMCPToolErrors:
     @pytest.mark.asyncio
     async def test_missing_required_parameters(self, mcp_server):
         """Test tool behavior with missing required parameters."""
-        async with Client(mcp_server) as client:
+        async with ClientSession(mcp_server) as session:
             with pytest.raises(Exception):
                 # This should fail due to missing required 'domain' parameter
-                await client.call_tool("get_dns_domain", {})
+                await session.call_tool("get_dns_domain", {})
 
 
 @pytest.mark.integration
@@ -242,21 +244,21 @@ class TestMCPIntegration:
         with patch('vultr_dns_mcp.server.VultrDNSServer', return_value=mock_vultr_client):
             server = create_mcp_server("test-api-key")
             
-            async with Client(server) as client:
+            async with ClientSession(server) as session:
                 # 1. List domains
-                domains = await client.call_tool("list_dns_domains", {})
+                domains = await session.call_tool("list_dns_domains", {})
                 assert domains is not None
                 
                 # 2. Get domain details
-                domain_info = await client.call_tool("get_dns_domain", {"domain": "example.com"})
+                domain_info = await session.call_tool("get_dns_domain", {"domain": "example.com"})
                 assert domain_info is not None
                 
                 # 3. List records
-                records = await client.call_tool("list_dns_records", {"domain": "example.com"})
+                records = await session.call_tool("list_dns_records", {"domain": "example.com"})
                 assert records is not None
                 
                 # 4. Analyze configuration
-                analysis = await client.call_tool("analyze_dns_records", {"domain": "example.com"})
+                analysis = await session.call_tool("analyze_dns_records", {"domain": "example.com"})
                 assert analysis is not None
                 
                 # Verify all expected API calls were made
@@ -270,9 +272,9 @@ class TestMCPIntegration:
         with patch('vultr_dns_mcp.server.VultrDNSServer', return_value=mock_vultr_client):
             server = create_mcp_server("test-api-key")
             
-            async with Client(server) as client:
+            async with ClientSession(server) as session:
                 # 1. Validate record before creation
-                validation = await client.call_tool("validate_dns_record", {
+                validation = await session.call_tool("validate_dns_record", {
                     "record_type": "A",
                     "name": "www",
                     "data": "192.168.1.100"
@@ -280,7 +282,7 @@ class TestMCPIntegration:
                 assert validation is not None
                 
                 # 2. Create the record
-                create_result = await client.call_tool("create_dns_record", {
+                create_result = await session.call_tool("create_dns_record", {
                     "domain": "example.com",
                     "record_type": "A", 
                     "name": "www",
@@ -302,9 +304,9 @@ class TestValidationLogic:
     @pytest.mark.asyncio
     async def test_a_record_validation(self, mcp_server):
         """Test A record validation logic."""
-        async with Client(mcp_server) as client:
+        async with ClientSession(mcp_server) as session:
             # Valid IPv4
-            result = await client.call_tool("validate_dns_record", {
+            result = await session.call_tool("validate_dns_record", {
                 "record_type": "A",
                 "name": "www",
                 "data": "192.168.1.1"
@@ -312,7 +314,7 @@ class TestValidationLogic:
             assert result is not None
             
             # Invalid IPv4
-            result = await client.call_tool("validate_dns_record", {
+            result = await session.call_tool("validate_dns_record", {
                 "record_type": "A", 
                 "name": "www",
                 "data": "999.999.999.999"
@@ -322,9 +324,9 @@ class TestValidationLogic:
     @pytest.mark.asyncio
     async def test_cname_validation(self, mcp_server):
         """Test CNAME record validation logic."""
-        async with Client(mcp_server) as client:
+        async with ClientSession(mcp_server) as session:
             # Invalid: CNAME on root domain
-            result = await client.call_tool("validate_dns_record", {
+            result = await session.call_tool("validate_dns_record", {
                 "record_type": "CNAME",
                 "name": "@",
                 "data": "example.com"
@@ -332,7 +334,7 @@ class TestValidationLogic:
             assert result is not None
             
             # Valid: CNAME on subdomain
-            result = await client.call_tool("validate_dns_record", {
+            result = await session.call_tool("validate_dns_record", {
                 "record_type": "CNAME",
                 "name": "www", 
                 "data": "example.com"
@@ -342,9 +344,9 @@ class TestValidationLogic:
     @pytest.mark.asyncio
     async def test_mx_validation(self, mcp_server):
         """Test MX record validation logic."""
-        async with Client(mcp_server) as client:
+        async with ClientSession(mcp_server) as session:
             # Invalid: Missing priority
-            result = await client.call_tool("validate_dns_record", {
+            result = await session.call_tool("validate_dns_record", {
                 "record_type": "MX",
                 "name": "@",
                 "data": "mail.example.com"
@@ -352,7 +354,7 @@ class TestValidationLogic:
             assert result is not None
             
             # Valid: With priority
-            result = await client.call_tool("validate_dns_record", {
+            result = await session.call_tool("validate_dns_record", {
                 "record_type": "MX",
                 "name": "@",
                 "data": "mail.example.com", 
