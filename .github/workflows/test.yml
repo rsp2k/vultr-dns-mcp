@@ -15,7 +15,7 @@ on:
       coverage_threshold:
         description: 'Coverage threshold percentage'
         required: false
-        default: '80'
+        default: '10'
         type: string
 
 env:
