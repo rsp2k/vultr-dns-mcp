@@ -61,7 +61,7 @@ The workflow uses [PyPI's trusted publishing](https://docs.pypi.org/trusted-publ
    ```
 
 4. **The workflow will automatically**:
-   - Run all tests
+   - Run basic validation
    - Build the package
    - Publish to PyPI
    - Create a GitHub release
@@ -81,13 +81,13 @@ You can also trigger publishing manually:
 
 Before creating a release tag:
 
-- [ ] All tests are passing on the main branch
+- [ ] Basic validation passes on the main branch
 - [ ] Version number is updated in `pyproject.toml`
 - [ ] `CHANGELOG.md` is updated with the new version
 - [ ] Documentation is up to date
 - [ ] No breaking changes without major version bump
 
-## 🔄 Version Numbering
+## 🔢 Version Numbering
 
 Follow [Semantic Versioning](https://semver.org/):
 
@@ -156,9 +156,9 @@ If you prefer using API tokens instead of trusted publishing:
 - Ensure you've set up trusted publishing correctly
 - Check the environment names match exactly
 
-**"Tests failing"**:
-- The workflow requires all validation tests to pass
-- Fix any failing tests before tagging
+**"Validation failing"**:
+- The workflow requires basic validation to pass
+- Fix any failing checks before tagging
 
 **"Tag doesn't match version"**:
 - Ensure the git tag matches the version in `pyproject.toml`
@@ -170,12 +170,17 @@ Test your package locally before publishing:
 
 ```bash
 # Install in development mode
-pip install -e .[dev,test]
+pip install -e .[dev]
 
 # Run the validation that the CI uses
-python run_tests.py --validate
-python run_tests.py --type unit
-python run_tests.py --lint
+# Check package can be imported
+python -c "import vultr_dns_mcp; print('✅ Package imports successfully')"
+
+# Run basic linting
+black --check --diff src/
+isort --check-only --diff src/
+flake8 src/
+mypy src/
 
 # Build and check the package
 python -m build
